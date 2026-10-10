@@ -1,0 +1,6 @@
+{
+  "name": "Nossa Meta — R$ 20 Mil",
+  "description": "Aplicativo para casais acompanharem juntos o desafio dos 200 depósitos rumo a R$ 20.000 com sincronização em tempo real.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

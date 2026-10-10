@@ -1,0 +1,117 @@
+{
+  "entities": {
+    "Challenge": {
+      "title": "Challenge",
+      "description": "Shared savings challenge for the couple",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the challenge"
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the savings challenge"
+        },
+        "targetAmount": {
+          "type": "number",
+          "description": "Total target amount to save in Brazilian Reais"
+        },
+        "partner1Name": {
+          "type": "string",
+          "description": "Name of the first partner",
+          "maxLength": 60
+        },
+        "partner2Name": {
+          "type": "string",
+          "description": "Name of the second partner",
+          "maxLength": 60
+        },
+        "partner1Uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the first partner"
+        },
+        "partner2Uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the second partner"
+        },
+        "inviteCode": {
+          "type": "string",
+          "description": "Short code to join the challenge on another device",
+          "maxLength": 20
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp when the challenge was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp when the challenge was last updated"
+        }
+      },
+      "required": ["id", "title", "targetAmount", "partner1Name", "partner2Name"]
+    },
+    "Deposit": {
+      "title": "Deposit",
+      "description": "Deposit marked for a specific number from 1 to 200",
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "number",
+          "description": "The number slot in the 200 grid (1 to 200)"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Monetary value saved for this slot in BRL"
+        },
+        "depositedBy": {
+          "type": "string",
+          "description": "Identifier of the partner who saved this amount",
+          "enum": ["partner1", "partner2"]
+        },
+        "depositedByName": {
+          "type": "string",
+          "description": "Display name of the person who made the deposit",
+          "maxLength": 60
+        },
+        "depositDate": {
+          "type": "string",
+          "description": "Date of deposit formatted as YYYY-MM-DD",
+          "maxLength": 10
+        },
+        "notes": {
+          "type": "string",
+          "description": "Optional notes or message regarding the deposit",
+          "maxLength": 200
+        },
+        "challengeId": {
+          "type": "string",
+          "description": "ID of the parent challenge"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the user who registered the deposit"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp when the deposit was registered"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp when the deposit was last updated"
+        }
+      },
+      "required": ["number", "amount", "depositedBy", "depositedByName", "depositDate", "challengeId"]
+    }
+  },
+  "firestore": {
+    "/challenges/{challengeId}": {
+      "schema": "Challenge",
+      "description": "Shared challenge entity containing partner names and goal configuration"
+    },
+    "/challenges/{challengeId}/deposits/{depositId}": {
+      "schema": "Deposit",
+      "description": "Subcollection of 200 numbers marked by the couple"
+    }
+  }
+}

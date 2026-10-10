@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper primitives
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 64 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Challenges collection
+    match /challenges/{challengeId} {
+      function isValidChallenge(data) {
+        return data.id is string && data.id.size() <= 64 &&
+          data.title is string && data.title.size() <= 100 &&
+          data.targetAmount is number && data.targetAmount > 0 &&
+          data.partner1Name is string && data.partner1Name.size() > 0 && data.partner1Name.size() <= 60 &&
+          data.partner2Name is string && data.partner2Name.size() > 0 && data.partner2Name.size() <= 60;
+      }
+
+      allow get: if isSignedIn() && isValidId(challengeId);
+      allow list: if isSignedIn();
+
+      allow create: if isSignedIn() && isValidId(challengeId) &&
+        isValidChallenge(incoming()) &&
+        incoming().id == challengeId;
+
+      allow update: if isSignedIn() && isValidId(challengeId) &&
+        isValidChallenge(incoming()) &&
+        incoming().id == existing().id;
+
+      allow delete: if false;
+
+      // Deposits subcollection: /challenges/{challengeId}/deposits/{depositId}
+      match /deposits/{depositId} {
+        function isValidDeposit(data) {
+          return data.number is number && data.number >= 1 && data.number <= 200 &&
+            data.amount is number && data.amount > 0 && data.amount <= 500 &&
+            data.depositedBy is string && (data.depositedBy == 'partner1' || data.depositedBy == 'partner2') &&
+            data.depositedByName is string && data.depositedByName.size() > 0 && data.depositedByName.size() <= 60 &&
+            data.depositDate is string && data.depositDate.size() <= 10 &&
+            data.challengeId is string && data.challengeId == challengeId;
+        }
+
+        allow get: if isSignedIn() && isValidId(depositId);
+        allow list: if isSignedIn();
+
+        allow create: if isSignedIn() && isValidId(depositId) &&
+          isValidDeposit(incoming());
+
+        allow update: if isSignedIn() && isValidId(depositId) &&
+          isValidDeposit(incoming()) &&
+          incoming().number == existing().number &&
+          incoming().challengeId == existing().challengeId;
+
+        allow delete: if isSignedIn() && isValidId(depositId);
+      }
+    }
+  }
+}
