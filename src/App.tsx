@@ -15,6 +15,7 @@ import { DepositModal } from './components/DepositModal';
 import { CoupleSettingsModal } from './components/CoupleSettingsModal';
 import { GoalCelebrationModal } from './components/GoalCelebrationModal';
 import { MilestoneToast, MilestoneInfo } from './components/MilestoneToast';
+import { DomainAuthHelpModal } from './components/DomainAuthHelpModal';
 import { ActiveTab } from './types';
 import { AlertCircle, X } from 'lucide-react';
 
@@ -177,6 +178,8 @@ function MainApp() {
       {isCelebrationOpen && (
         <GoalCelebrationModal onClose={() => setIsCelebrationOpen(false)} />
       )}
+
+      <DomainAuthHelpModal />
     </div>
   );
 }

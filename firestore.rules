@@ -33,14 +33,14 @@ service cloud.firestore {
           data.partner2Name is string && data.partner2Name.size() > 0 && data.partner2Name.size() <= 60;
       }
 
-      allow get: if isSignedIn() && isValidId(challengeId);
-      allow list: if isSignedIn();
+      allow get: if isValidId(challengeId);
+      allow list: if true;
 
-      allow create: if isSignedIn() && isValidId(challengeId) &&
+      allow create: if isValidId(challengeId) &&
         isValidChallenge(incoming()) &&
         incoming().id == challengeId;
 
-      allow update: if isSignedIn() && isValidId(challengeId) &&
+      allow update: if isValidId(challengeId) &&
         isValidChallenge(incoming()) &&
         incoming().id == existing().id;
 
@@ -57,18 +57,18 @@ service cloud.firestore {
             data.challengeId is string && data.challengeId == challengeId;
         }
 
-        allow get: if isSignedIn() && isValidId(depositId);
-        allow list: if isSignedIn();
+        allow get: if isValidId(depositId);
+        allow list: if true;
 
-        allow create: if isSignedIn() && isValidId(depositId) &&
+        allow create: if isValidId(depositId) &&
           isValidDeposit(incoming());
 
-        allow update: if isSignedIn() && isValidId(depositId) &&
+        allow update: if isValidId(depositId) &&
           isValidDeposit(incoming()) &&
           incoming().number == existing().number &&
           incoming().challengeId == existing().challengeId;
 
-        allow delete: if isSignedIn() && isValidId(depositId);
+        allow delete: if isValidId(depositId);
       }
     }
   }

@@ -70,11 +70,6 @@ export const DepositModal: React.FC<DepositModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!currentUser) {
-      await signInWithGoogle();
-      return;
-    }
-
     setSubmitting(true);
     try {
       await saveDeposit({
@@ -106,7 +101,6 @@ export const DepositModal: React.FC<DepositModalProps> = ({
   };
 
   const handleDelete = async () => {
-    if (!currentUser) return;
     setSubmitting(true);
     try {
       await removeDeposit(number);

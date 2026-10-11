@@ -40,6 +40,11 @@ export const CoupleSettingsModal: React.FC<CoupleSettingsModalProps> = ({ onClos
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
 
+  React.useEffect(() => {
+    setP1Name(challenge.partner1Name);
+    setP2Name(challenge.partner2Name);
+  }, [challenge.partner1Name, challenge.partner2Name]);
+
   const handleSaveNames = async (e: React.FormEvent) => {
     e.preventDefault();
     await updatePartnerNames(p1Name, p2Name);
